@@ -2,8 +2,10 @@ package br.dee.trancasdee.controllers;
 
 
 import br.dee.trancasdee.models.Acesso.AcessoResponse;
+import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.services.AcessoService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +38,12 @@ public class AcessoController {
     @GetMapping("/usuario/{usuario}")
     public ResponseEntity<List<AcessoResponse>> findAcessoByUsuarios(@PathVariable Usuarios usuario) {
         var aux = acessoService.findAcessoByUsuarios(usuario);
+        return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
+    }
+
+    @GetMapping("/ambientes/{ambientes}")
+    public ResponseEntity<List<AcessoResponse>> findAcessoByAmbientes(@PathVariable Ambientes ambientes) {
+        var aux = acessoService.findAcessoByAmbientes(ambientes);
         return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
     }
 }

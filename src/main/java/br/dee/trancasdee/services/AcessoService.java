@@ -1,6 +1,7 @@
 package br.dee.trancasdee.services;
 
 import br.dee.trancasdee.models.Acesso.Acesso;
+import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.respositories.AcessoRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,10 @@ public class AcessoService {
 
     public List<Acesso> findAcessoByUsuarios(Usuarios usuario) {
         return acessoRepository.findAcessoByUsuarios(usuario);
+    }
+
+    public List<Acesso> findAcessoByAmbientes(Ambientes ambientes) {
+        return acessoRepository.findAcessoByAmbientes(ambientes);
     }
 
     public Acesso save(Acesso acesso) {
