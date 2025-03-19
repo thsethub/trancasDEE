@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  spring-app:
+    build: .
+    image: trancas:latest
+    ports:
+      - "3000:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://10.27.41.31:3306/sys
+    networks:
+      - trancas-network
+
+networks:
+  trancas-network:
+    driver: bridge
