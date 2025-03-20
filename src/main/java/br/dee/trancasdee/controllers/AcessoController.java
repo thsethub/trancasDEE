@@ -46,4 +46,10 @@ public class AcessoController {
         var aux = acessoService.findAcessoByAmbientes(ambientes);
         return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
     }
+
+    @GetMapping("/uniqueID/{uniqueID}")
+    public ResponseEntity<List<AcessoResponse>> findAcessoByUniqueID(@PathVariable Long uniqueID) {
+        var aux = acessoService.findAcessoByUniqueID(uniqueID);
+        return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
+    }
 }

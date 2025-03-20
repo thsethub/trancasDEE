@@ -33,6 +33,10 @@ public class AcessoService {
         return acessoRepository.findAcessoByAmbientes(ambientes);
     }
 
+    public List<Acesso> findAcessoByUniqueID(Long uniqueID) {
+        return acessoRepository.findAcessoByUniqueID(uniqueID);
+    }
+
     public Acesso save(Acesso acesso) {
         return acessoRepository.save(acesso);
     }
