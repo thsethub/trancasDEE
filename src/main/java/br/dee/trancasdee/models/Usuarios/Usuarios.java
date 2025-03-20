@@ -44,5 +44,13 @@ public class Usuarios {
         return cpf;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public Long getUniqueID() {
+        return uniqueID;
+    }
+
 
 }

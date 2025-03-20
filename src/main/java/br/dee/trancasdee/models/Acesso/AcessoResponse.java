@@ -13,6 +13,7 @@ public record AcessoResponse (
         String nomeAmbiente,
 //        @JsonProperty("CPF")
         long cpfUsuario,
+        long uniqueID,
 //        @JsonProperty("Data_Limite")
         Instant dataLimite,
 //        @JsonProperty("Hora_acesso_inicial")
@@ -25,6 +26,7 @@ public record AcessoResponse (
                 acesso.getId(),
                 acesso.getAmbientes().getSala(),
                 acesso.getUsuarios().getCpf(),
+                acesso.getUsuarios().getUniqueID(),
                 acesso.getDataLimite(),
                 acesso.getHoraAcessoInicial(),
                 acesso.getHoraAcessoFinal()
