@@ -24,6 +24,10 @@ public class AmbientesService {
         return ambientesRepository.findById(id).orElse(null);
     }
 
+    public List<Ambientes> findAmbientesBySala(Ambientes ambientes){
+        return ambientesRepository.findAmbientesBySala(ambientes);
+    }
+
     public Ambientes save(Ambientes ambientes){
         return ambientesRepository.save(ambientes);
     }

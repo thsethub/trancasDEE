@@ -26,6 +26,11 @@ public class AmbientesController {
         return ResponseEntity.ok(ambientesService.findById(id));
     }
 
+    @GetMapping("/sala/{sala}")
+    public ResponseEntity findAmbientesBySala(@PathVariable Ambientes ambientes){
+        return ResponseEntity.ok(ambientesService.findAmbientesBySala(ambientes));
+    }
+
     public ResponseEntity save(Ambientes ambientes){
         return ResponseEntity.ok(ambientesService.save(ambientes));
     }

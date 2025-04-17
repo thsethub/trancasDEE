@@ -39,7 +39,6 @@ public class Acesso {
     @JoinColumn(name = "Hora_acesso_final")
     private LocalTime horaAcessoFinal;
 
-
     public long getId() {
         return id;
     }

@@ -37,6 +37,10 @@ public class AcessoService {
         return acessoRepository.findAcessoByUniqueID(uniqueID);
     }
 
+    public List<Acesso> findAcessoBySalaAndUniqueID(Long sala, String uniqueID) {
+        return acessoRepository.findAcessoBySalaAndUniqueID(sala, uniqueID);
+    }
+
     public Acesso save(Acesso acesso) {
         return acessoRepository.save(acesso);
     }

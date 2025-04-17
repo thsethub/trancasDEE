@@ -1,6 +1,7 @@
 package br.dee.trancasdee.controllers;
 
 
+import br.dee.trancasdee.models.Acesso.Acesso;
 import br.dee.trancasdee.models.Acesso.AcessoResponse;
 import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
@@ -50,6 +51,12 @@ public class AcessoController {
     @GetMapping("/uniqueID/{uniqueID}")
     public ResponseEntity<List<AcessoResponse>> findAcessoByUniqueID(@PathVariable Long uniqueID) {
         var aux = acessoService.findAcessoByUniqueID(uniqueID);
+        return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
+    }
+
+    @GetMapping("/sala/{sala}/uniqueID/{uniqueID}")
+    public ResponseEntity<List<AcessoResponse>> findAcessoBySalaAndUniqueID(@PathVariable Long sala, @PathVariable String uniqueID) {
+        var aux = acessoService.findAcessoBySalaAndUniqueID(sala, uniqueID);
         return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
     }
 }

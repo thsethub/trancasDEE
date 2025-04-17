@@ -15,5 +15,8 @@ public interface AcessoRepository extends JpaRepository<Acesso, Long> {
 
     @Query("SELECT a FROM Acesso a WHERE a.usuarios.uniqueID = :uniqueID")
     List<Acesso> findAcessoByUniqueID(@Param("uniqueID") Long uniqueID);
+
+    @Query("SELECT a FROM Acesso a WHERE a.usuarios.uniqueID = :uniqueID AND a.ambientes.sala = :sala")
+    List<Acesso> findAcessoBySalaAndUniqueID(@Param("uniqueID") Long uniqueID, @Param("sala") String sala);
 }
 
