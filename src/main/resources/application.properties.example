@@ -1,0 +1,168 @@
+# Configuração da aplicação trancasDEE
+spring.application.name=trancasDEE
+
+# Porta do servidor
+server.port=3000
+
+# ========================================
+# CONFIGURAÇÃO DO BANCO DE DADOS
+# ========================================
+
+# URL do banco de dados MariaDB
+# Para desenvolvimento local: jdbc:mariadb://localhost:3306/sys
+# Para Docker: jdbc:mariadb://mariadb:3306/sys
+# Para produção: jdbc:mariadb://seu-servidor-db:3306/sys
+spring.datasource.url=jdbc:mariadb://localhost:3306/sys
+
+# Credenciais do banco de dados
+spring.datasource.username=trancasdee
+spring.datasource.password=senha_segura
+
+# Driver do MariaDB
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+
+# ========================================
+# CONFIGURAÇÕES JPA/HIBERNATE
+# ========================================
+
+# Mostrar SQL queries no log (desabilitar em produção)
+spring.jpa.show-sql=true
+
+# Formatar SQL queries no log
+spring.jpa.properties.hibernate.format_sql=true
+
+# Estratégia de criação do schema
+# - none: não faz nada (recomendado para produção)
+# - validate: valida se o schema está correto
+# - update: atualiza o schema automaticamente
+# - create: recria o schema (CUIDADO: apaga dados existentes)
+# - create-drop: recria e apaga ao final da aplicação
+spring.jpa.hibernate.ddl-auto=validate
+
+# Manter nomes originais das tabelas e colunas
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+# ========================================
+# CONFIGURAÇÕES DE LOG
+# ========================================
+
+# Log detalhado de SQL e binding de parâmetros (desabilitar em produção)
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# Log da aplicação
+logging.level.br.dee.trancasdee=INFO
+
+# ========================================
+# CONFIGURAÇÕES DE SERIALIZAÇÃO JSON
+# ========================================
+
+# Usar snake_case para propriedades JSON
+spring.jackson.property-naming-strategy=SNAKE_CASE
+
+# ========================================
+# CONFIGURAÇÕES DE PROFILE
+# ========================================
+
+# Profiles ativos (development, production, docker)
+# spring.profiles.active=development
+
+# ========================================
+# CONFIGURAÇÕES DE POOL DE CONEXÕES
+# ========================================
+
+# Configurações do HikariCP (pool de conexões padrão do Spring Boot)
+spring.datasource.hikari.minimum-idle=5
+spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.connection-timeout=20000
+spring.datasource.hikari.idle-timeout=300000
+spring.datasource.hikari.max-lifetime=1200000
+
+# ========================================
+# CONFIGURAÇÕES DE MONITORAMENTO
+# ========================================
+
+# Habilitar endpoints do Actuator para monitoramento
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=when-authorized
+management.endpoint.health.show-components=always
+
+# ========================================
+# CONFIGURAÇÕES DE SEGURANÇA
+# ========================================
+
+# Headers de segurança (quando usando Spring Security)
+# server.servlet.session.cookie.secure=true
+# server.servlet.session.cookie.http-only=true
+
+# ========================================
+# CONFIGURAÇÕES ESPECÍFICAS POR AMBIENTE
+# ========================================
+
+---
+# Profile de desenvolvimento
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: jdbc:mariadb://localhost:3306/sys
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    br.dee.trancasdee: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# Profile para Docker
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/sys
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+logging:
+  level:
+    br.dee.trancasdee: INFO
+    org.hibernate.SQL: WARN
+
+---
+# Profile de produção
+spring:
+  config:
+    activate:
+      on-profile: production
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sys}
+    username: ${DB_USERNAME:trancasdee}
+    password: ${DB_PASSWORD:senha_segura}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+logging:
+  level:
+    br.dee.trancasdee: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  file:
+    name: /var/log/trancasdee/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
