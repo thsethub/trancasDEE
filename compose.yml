@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://10.27.41.31:3306/sys
+      SPRING_DATASOURCE_URL: jdbc:mariadb://10.27.41.31:3306/ACESSO
     networks:
       - trancas-network
 

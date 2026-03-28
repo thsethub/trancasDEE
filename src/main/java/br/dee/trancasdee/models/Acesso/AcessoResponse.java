@@ -7,8 +7,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 
 public record AcessoResponse (
-//        @JsonProperty("id")
-        long id,
+        Long id,
 //        @JsonProperty("id")
         String nomeAmbiente,
 //        @JsonProperty("CPF")

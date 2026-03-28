@@ -21,8 +21,9 @@ import java.time.LocalTime;
 public class Acesso {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    private long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "Sala")
     private Ambientes ambientes;
@@ -39,7 +40,7 @@ public class Acesso {
     @JoinColumn(name = "Hora_acesso_final")
     private LocalTime horaAcessoFinal;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

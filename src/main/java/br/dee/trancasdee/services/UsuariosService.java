@@ -31,6 +31,10 @@ public class UsuariosService {
         return usuariosRepository.findAll();
     }
 
+    public List<Usuarios> buscaPorNome(String nome) {
+        return usuariosRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
     public Usuarios findById(Long id) {
         return usuariosRepository.findById(id).orElse(null);
     }

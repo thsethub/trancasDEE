@@ -6,6 +6,7 @@ import br.dee.trancasdee.services.UsuariosService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +22,11 @@ public class UsuariosController {
     @GetMapping
     public ResponseEntity findAll() {
         return ResponseEntity.ok(usuariosService.findAll());
+    }
+
+    @GetMapping("/busca")
+    public ResponseEntity<List<Usuarios>> busca(@RequestParam String nome) {
+        return ResponseEntity.ok(usuariosService.buscaPorNome(nome));
     }
 
     @GetMapping("/{id}")

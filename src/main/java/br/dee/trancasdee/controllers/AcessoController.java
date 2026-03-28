@@ -2,16 +2,13 @@ package br.dee.trancasdee.controllers;
 
 
 import br.dee.trancasdee.models.Acesso.Acesso;
+import br.dee.trancasdee.models.Acesso.AcessoRequest;
 import br.dee.trancasdee.models.Acesso.AcessoResponse;
 import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.services.AcessoService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +31,24 @@ public class AcessoController {
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {
         return ResponseEntity.ok(acessoService.findById(id));
+    }
+
+    @GetMapping("/sala/{salaId}")
+    public ResponseEntity<List<AcessoResponse>> findBySalaId(@PathVariable Long salaId) {
+        var aux = acessoService.findAcessoBySalaId(salaId);
+        return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
+    }
+
+    @PostMapping
+    public ResponseEntity<AcessoResponse> create(@RequestBody AcessoRequest request) {
+        Acesso acesso = acessoService.create(request);
+        return ResponseEntity.ok(new AcessoResponse(acesso));
+    }
+
+    @PutMapping("/{id}/revogar")
+    public ResponseEntity<AcessoResponse> revogar(@PathVariable Long id) {
+        Acesso acesso = acessoService.revogar(id);
+        return ResponseEntity.ok(new AcessoResponse(acesso));
     }
 
     @GetMapping("/usuario/{usuario}")

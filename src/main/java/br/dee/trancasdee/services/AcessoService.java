@@ -1,20 +1,33 @@
 package br.dee.trancasdee.services;
 
 import br.dee.trancasdee.models.Acesso.Acesso;
+import br.dee.trancasdee.models.Acesso.AcessoRequest;
 import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.respositories.AcessoRepository;
+import br.dee.trancasdee.respositories.AmbientesRepository;
+import br.dee.trancasdee.respositories.UsuariosRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
 public class AcessoService {
 
     private final AcessoRepository acessoRepository;
+    private final AmbientesRepository ambientesRepository;
+    private final UsuariosRepository usuariosRepository;
 
-    public AcessoService(AcessoRepository acessoRepository) {
+    public AcessoService(AcessoRepository acessoRepository,
+                         AmbientesRepository ambientesRepository,
+                         UsuariosRepository usuariosRepository) {
         this.acessoRepository = acessoRepository;
+        this.ambientesRepository = ambientesRepository;
+        this.usuariosRepository = usuariosRepository;
     }
 
     public List<Acesso> findAll() {
@@ -39,6 +52,38 @@ public class AcessoService {
 
     public List<Acesso> findAcessoBySalaAndUniqueID(Long sala, String uniqueID) {
         return acessoRepository.findAcessoBySalaAndUniqueID(sala, uniqueID);
+    }
+
+    public List<Acesso> findAcessoBySalaId(Long salaId) {
+        return acessoRepository.findAcessoBySalaId(salaId);
+    }
+
+    public Acesso create(AcessoRequest request) {
+        Ambientes sala = ambientesRepository.findById(request.salaId())
+                .orElseThrow(() -> new RuntimeException("Sala não encontrada: " + request.salaId()));
+        Usuarios usuario = usuariosRepository.findById(request.cpf())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + request.cpf()));
+
+        ZoneId zoneRecife = ZoneId.of("America/Recife");
+        LocalDate dataLimite = LocalDate.parse(request.dataLimite());
+        Instant dataLimiteInstant = dataLimite.atStartOfDay(zoneRecife).toInstant();
+
+        Acesso acesso = new Acesso();
+        acesso.setAmbientes(sala);
+        acesso.setUsuarios(usuario);
+        acesso.setDataLimite(dataLimiteInstant);
+        acesso.setHoraAcessoInicial(LocalTime.parse(request.horaAcessoInicial()));
+        acesso.setHoraAcessoFinal(LocalTime.parse(request.horaAcessoFinal()));
+        return acessoRepository.save(acesso);
+    }
+
+    public Acesso revogar(Long id) {
+        Acesso acesso = acessoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Acesso não encontrado: " + id));
+        ZoneId zoneRecife = ZoneId.of("America/Recife");
+        Instant ontem = LocalDate.now(zoneRecife).minusDays(1).atStartOfDay(zoneRecife).toInstant();
+        acesso.setDataLimite(ontem);
+        return acessoRepository.save(acesso);
     }
 
     public Acesso save(Acesso acesso) {
