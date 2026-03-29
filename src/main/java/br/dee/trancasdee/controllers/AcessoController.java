@@ -4,9 +4,13 @@ package br.dee.trancasdee.controllers;
 import br.dee.trancasdee.models.Acesso.Acesso;
 import br.dee.trancasdee.models.Acesso.AcessoRequest;
 import br.dee.trancasdee.models.Acesso.AcessoResponse;
+import br.dee.trancasdee.models.Acesso.AcessoUpdateRequest;
 import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.services.AcessoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +38,18 @@ public class AcessoController {
     }
 
     @GetMapping("/sala/{salaId}")
-    public ResponseEntity<List<AcessoResponse>> findBySalaId(@PathVariable Long salaId) {
-        var aux = acessoService.findAcessoBySalaId(salaId);
-        return ResponseEntity.ok(aux.stream().map(AcessoResponse::new).toList());
+    public ResponseEntity<Page<AcessoResponse>> findBySalaId(
+            @PathVariable Long salaId,
+            @RequestParam(defaultValue = "") String nome,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        Page<Acesso> page = acessoService.findAcessoBySalaIdPaged(salaId, nome, pageable);
+        return ResponseEntity.ok(page.map(AcessoResponse::new));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AcessoResponse> update(@PathVariable Long id, @RequestBody AcessoUpdateRequest request) {
+        Acesso acesso = acessoService.update(id, request);
+        return ResponseEntity.ok(new AcessoResponse(acesso));
     }
 
     @PostMapping

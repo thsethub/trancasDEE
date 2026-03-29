@@ -2,12 +2,16 @@ package br.dee.trancasdee.services;
 
 import br.dee.trancasdee.models.Acesso.Acesso;
 import br.dee.trancasdee.models.Acesso.AcessoRequest;
+import br.dee.trancasdee.models.Acesso.AcessoUpdateRequest;
 import br.dee.trancasdee.models.Ambientes;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.respositories.AcessoRepository;
 import br.dee.trancasdee.respositories.AmbientesRepository;
 import br.dee.trancasdee.respositories.UsuariosRepository;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -56,6 +60,21 @@ public class AcessoService {
 
     public List<Acesso> findAcessoBySalaId(Long salaId) {
         return acessoRepository.findAcessoBySalaId(salaId);
+    }
+
+    public Page<Acesso> findAcessoBySalaIdPaged(Long salaId, String nome, Pageable pageable) {
+        return acessoRepository.findAcessoBySalaIdPaged(salaId, nome == null ? "" : nome, pageable);
+    }
+
+    public Acesso update(Long id, AcessoUpdateRequest request) {
+        Acesso acesso = acessoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Acesso não encontrado: " + id));
+        ZoneId zoneRecife = ZoneId.of("America/Recife");
+        LocalDate dataLimite = LocalDate.parse(request.dataLimite());
+        acesso.setDataLimite(dataLimite.atStartOfDay(zoneRecife).toInstant());
+        acesso.setHoraAcessoInicial(LocalTime.parse(request.horaAcessoInicial()));
+        acesso.setHoraAcessoFinal(LocalTime.parse(request.horaAcessoFinal()));
+        return acessoRepository.save(acesso);
     }
 
     public Acesso create(AcessoRequest request) {

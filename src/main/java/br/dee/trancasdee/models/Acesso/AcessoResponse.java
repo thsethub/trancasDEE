@@ -8,29 +8,25 @@ import java.time.LocalTime;
 
 public record AcessoResponse (
         Long id,
-//        @JsonProperty("id")
         String nomeAmbiente,
-//        @JsonProperty("CPF")
         long cpfUsuario,
+        String nomeUsuario,
         long uniqueID,
-//        @JsonProperty("Data_Limite")
         Instant dataLimite,
-//        @JsonProperty("Hora_acesso_inicial")
         LocalTime horaAcessoInicial,
-//        @JsonProperty("Hora_acesso_final")
         LocalTime horaAcessoFinal
 ){
     public AcessoResponse(Acesso acesso){
         this(
                 acesso.getId(),
-                acesso.getAmbientes().getSala(),
-                acesso.getUsuarios().getCpf(),
-                acesso.getUsuarios().getUniqueID(),
+                acesso.getAmbientes() != null ? acesso.getAmbientes().getSala() : "Desconhecido",
+                acesso.getUsuarios() != null ? acesso.getUsuarios().getCpf() : 0L,
+                acesso.getUsuarios() != null ? acesso.getUsuarios().getNome() : "Desconhecido",
+                acesso.getUsuarios() != null && acesso.getUsuarios().getUniqueID() != null
+                        ? acesso.getUsuarios().getUniqueID() : 0L,
                 acesso.getDataLimite(),
                 acesso.getHoraAcessoInicial(),
                 acesso.getHoraAcessoFinal()
         );
     }
-
-
 }

@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface AcessoRepository extends JpaRepository<Acesso, Long> {
@@ -21,5 +24,9 @@ public interface AcessoRepository extends JpaRepository<Acesso, Long> {
 
     @Query("SELECT a FROM Acesso a WHERE a.ambientes.id = :salaId")
     List<Acesso> findAcessoBySalaId(@Param("salaId") Long salaId);
+
+    @Query(value = "SELECT a FROM Acesso a WHERE a.ambientes.id = :salaId AND (:nome = '' OR LOWER(a.usuarios.nome) LIKE LOWER(CONCAT('%', :nome, '%')))",
+           countQuery = "SELECT COUNT(a) FROM Acesso a WHERE a.ambientes.id = :salaId AND (:nome = '' OR LOWER(a.usuarios.nome) LIKE LOWER(CONCAT('%', :nome, '%')))")
+    Page<Acesso> findAcessoBySalaIdPaged(@Param("salaId") Long salaId, @Param("nome") String nome, Pageable pageable);
 }
 

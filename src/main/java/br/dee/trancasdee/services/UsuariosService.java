@@ -4,6 +4,8 @@ package br.dee.trancasdee.services;
 import br.dee.trancasdee.models.Usuarios.Usuarios;
 import br.dee.trancasdee.respositories.UsuariosRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,6 +39,10 @@ public class UsuariosService {
 
     public Usuarios findById(Long id) {
         return usuariosRepository.findById(id).orElse(null);
+    }
+
+    public Page<Usuarios> findDisponiveisBySala(String nome, Long salaId, Pageable pageable) {
+        return usuariosRepository.findDisponiveisBySalaId(nome, salaId, pageable);
     }
 
     public Usuarios save(Usuarios usuarios) {
